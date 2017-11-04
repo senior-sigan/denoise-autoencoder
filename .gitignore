@@ -143,3 +143,4 @@ Temporary Items
 
 .idea
 *.h5
+.vagrant
