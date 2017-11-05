@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 import numpy as np
 import soundfile as sf
 from matplotlib import pyplot as plt
 from scipy import signal
-import os
 
 sound_len = 16384
 
@@ -16,22 +17,26 @@ def make_spectrum(sound, sample_rate):
     return Pxx
 
 
-def save_spectrum(name, image_path, sound_path):
-    sound, sr = sf.read(sound_path.format(name))
-    print("{}: {}".format(name, sound.shape))
+def save_spectrum(sound_path, image_path):
+    name = os.path.split(sound_path)[-1]
+    sound, sr = sf.read(sound_path)
     Pxx = make_spectrum(sound, sr)
-    plt.imsave(image_path.format(name), Pxx, cmap='gray')
+    plt.imsave(os.path.join(image_path, name + ".png"), Pxx, cmap='gray')
 
 
 def main():
-    # sound_path = 'data/clean/{}.wav'
-    # image_path = 'data/spectrums/{}.png'
+    sound_path = os.path.join('data', 'audio')
+    image_path = os.path.join('data', 'spectrums')
 
-    sound_path = 'data/audio/car_10dB/{}.wav'
-    image_path = 'data/test_spectrums/{}.png'
-
-    for name in os.listdir('data/audio/car_10dB'):
-        save_spectrum(name.replace(".wav", ""), image_path, sound_path)
+    for root, dirs, files in os.walk(sound_path):
+        if len(files) == 0:
+            continue
+        group = root.split(os.sep)[-1]
+        spectrum_path = os.path.join(image_path, group)
+        os.makedirs(spectrum_path, exist_ok=True)
+        files = [os.path.join(root, f) for f in files]
+        for file in files:
+            save_spectrum(file, spectrum_path)
 
 
 if __name__ == '__main__':

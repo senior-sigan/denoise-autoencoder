@@ -4,7 +4,8 @@ import os
 from keras.models import load_model
 from matplotlib import pyplot as plt
 
-from data_loader import load_test
+from data_loader import read_file
+import numpy as np
 
 
 def save_predictions(prediction):
@@ -18,8 +19,8 @@ def save_predictions(prediction):
 def main():
     model = load_model('models/final.h5')
 
-    files = ['data/test_spectrums/{}'.format(name) for name in os.listdir('data/test_spectrums')]
-    X_test = load_test(files)
+    path = 'data/spectrums/airport0dB'
+    X_test = np.array([read_file(os.path.join(path, name)) for name in os.listdir(path)])
     save_predictions(model.predict(X_test))
 
 

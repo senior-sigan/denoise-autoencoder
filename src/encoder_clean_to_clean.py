@@ -8,6 +8,8 @@ from keras.layers.core import Activation
 from keras.models import Model
 from keras.optimizers import Adadelta
 
+NAME = "autoencoder_sound_augmented"
+
 
 def conv_layer(x, size, dropout, filter_size=(3, 3)):
     conv = Conv2D(size, filter_size, padding='same')(x)
@@ -23,18 +25,18 @@ def build_model():
     dropout = 0.3
     filter_size = (3, 3)
 
-    conv = conv_layer(inputs, 64, dropout, filter_size)
+    conv = conv_layer(inputs, 32, dropout, filter_size)
 
-    conv = conv_layer(conv, 64, dropout, filter_size)
+    conv = conv_layer(conv, 32, dropout, filter_size)
 
-    conv = conv_layer(conv, 64, dropout, filter_size)
+    conv = conv_layer(conv, 32, dropout, filter_size)
 
-    conv = conv_layer(conv, 64, dropout, filter_size)
+    conv = conv_layer(conv, 32, dropout, filter_size)
 
     conv = Conv2D(1, (1, 1))(conv)
     conv = Activation('sigmoid')(conv)
 
-    model = Model(inputs, conv, name="autoencoder_sound")
+    model = Model(inputs, conv, name=NAME)
     return model
 
 
@@ -50,7 +52,7 @@ def train(model, x_train, y_train, x_test, y_test, epochs=100, batch_size=128):
               shuffle=True,
               validation_data=(x_test, y_test),
               callbacks=[TensorBoard(
-                  log_dir="/tmp/tensorflow/autoencoder_sound",
+                  log_dir="/tmp/tensorflow/{}".format(NAME),
                   write_images=False,
                   histogram_freq=5,
                   batch_size=batch_size
