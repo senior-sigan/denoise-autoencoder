@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import os
 
+import numpy as np
 from keras.models import load_model
 from matplotlib import pyplot as plt
 
-from data_loader import read_file
-import numpy as np
+from spectrums.data_loader import read_file
 
 
 def save_predictions(prediction):

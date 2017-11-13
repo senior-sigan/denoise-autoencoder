@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from data_loader import load_train_test
-
 from encoder_clean_to_clean import build_model, train
+
+from spectrums.data_loader import load_train_test
 
 
 def main():
