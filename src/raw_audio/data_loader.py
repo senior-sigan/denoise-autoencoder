@@ -8,9 +8,13 @@ import soundfile as sf
 N = 16384
 
 
+def min_max_scale(s):
+    return (s - s.min()) / (s.max() - s.min())
+
+
 def read_file(path):
-    sound, sr = sf.read(path)
-    return sound[:N].reshape(N, 1).astype('float32')
+    sound, sr = sf.read(path, dtype='int32')
+    return min_max_scale(sound[:N].reshape(N, 1).astype('int64')).astype('float32')
 
 
 def get_X_Y(data, some=lambda x: x[:]):
